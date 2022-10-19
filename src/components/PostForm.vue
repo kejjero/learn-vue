@@ -1,28 +1,30 @@
 <template>
   <form action="" class="form" @submit.prevent="createPost">
-    <input
-        v-model="post.title"
+    <my-input
+        v-model:value="post.title"
         type="text"
         placeholder="Заголовок"
         class="input"
-    >
-    <input
-        v-model="post.description"
+    />
+    <my-input
+        v-model:value="post.body"
         type="text"
         placeholder="Описание"
         class="input"
-    >
-    <button type="submit" class="btn">Добавить</button>
+    />
+    <my-button>Добавить</my-button>
   </form>
 </template>
 
 <script>
 export default {
+  components: {},
+
   data() {
     return {
       post: {
         title: "",
-        description: "",
+        body: "",
       }
     }
   },
@@ -41,5 +43,12 @@ export default {
 </script>
 
 <style>
-
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 15px;
+}
 </style>

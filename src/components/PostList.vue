@@ -1,14 +1,21 @@
 <template>
+  <h2 class="posts-title" v-if="posts.length">Список чего-то:</h2>
+  <h2 class="posts-title" v-else style="color: red" >Список пуст</h2>
   <ul class="posts">
-    <li class="post" v-for="post in posts">
-      <h2>{{ post.title }}</h2>
-      <p>{{ post.description }}</p>
-    </li>
+    <post-item
+        class="post"
+        :post="post"
+        v-for="post in posts"
+        :key="post.id"
+        @remove="$emit('remove', post)"
+    />
   </ul>
 </template>
 
 <script>
+import PostItem from "@/components/PostItem";
 export default {
+  components: {PostItem},
   props: {
     posts: {
       type: Array,
@@ -19,6 +26,11 @@ export default {
 </script>
 
 <style>
+
+.posts-title {
+  align-self: flex-start;
+}
+
 .posts {
   list-style: none;
   display: flex;
@@ -31,9 +43,4 @@ export default {
   margin-top: 15px;
 }
 
-.post {
-  border: 2px solid #000;
-  padding: 15px 10px;
-  width: 100%;
-}
 </style>

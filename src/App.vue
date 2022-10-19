@@ -1,28 +1,51 @@
 <template>
   <div class="content">
-    <post-form @create="createPost"/>
-    <post-list :posts="posts"/>
+    <my-dialog v-model:show="dialogVisible" >
+      <post-form @create="createPost"/>
+    </my-dialog>
+    <h1>Главная страница</h1>
+    <my-button @click="setDialogVisible">Добавить пост</my-button>
+    <post-list :posts="posts" @remove="removePost"/>
   </div>
 </template>
 
 <script>
+import axios from "axios"
 import PostList from "@/components/PostList";
 import PostForm from "@/components/PostForm";
+import MyDialog from "@/components/UI/MyDialog";
+import MyButton from "@/components/UI/MyButton";
 export default {
-  components: {PostList, PostForm},
+  components: {MyButton, MyDialog, PostList, PostForm},
   data() {
     return {
-      posts: [
-        {id: 1, title: "JavaScript 1", description: "Информация о JavaScript 1"},
-        {id: 2, title: "JavaScript 2", description: "Информация о JavaScript 2"},
-        {id: 3, title: "JavaScript 3", description: "Информация о JavaScript 3"},
-      ],
+      posts: [],
+      dialogVisible: false,
     }
   },
   methods: {
     createPost(post) {
       this.posts.push(post)
-    }
+      this.dialogVisible = false;
+
+    },
+    removePost(post) {
+      this.posts = this.posts.filter(item => item.id !== post.id)
+    },
+    setDialogVisible() {
+      this.dialogVisible = true
+    },
+    async getPosts () {
+      try {
+        const response = await axios.get("https://jsonplaceholder.typicode.com/posts?_limit=10")
+        this.posts = response.data
+      } catch (err) {
+        alert("Ошибка " + err)
+      }
+    },
+  },
+  mounted() {
+    this.getPosts()
   }
 }
 
@@ -46,32 +69,6 @@ export default {
   justify-content: center;
   max-width: 800px;
   margin: 0 auto;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  gap: 15px;
-  margin-top: 110px;
-}
-
-.input {
-  margin: 0;
-  padding: 10px 5px;
-  width: 100%;
-}
-
-.btn {
-  margin: 0;
-  padding: 10px 15px;
-  background-color: black;
-  color: #fff;
-  border: none;
-  font-size: 14px;
-  align-self: flex-end;
 }
 
 
